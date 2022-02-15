@@ -1,50 +1,4 @@
-from importlib.metadata import distribution
-import sys
 import numpy as np
-from datetime import datetime
-
-
-class Calculate:
-    vmin = None
-    vmax = None
-    list_of_length = []
-
-    def calcul_length(self, a: list, b: list):
-        length = sum(((float(a[i]) - float(b[i])) ** 2 for i, _ in enumerate(a)))
-        return length 
-
-    def __init__(self, data: list):
-        print(sys.getsizeof(data))
-        now = datetime.now()
-        len_data = len(data) -1
-        for a in range(len_data, 0, -1):
-            for b in range(len_data, 0, -1):
-                if a == b:
-                    continue
-                
-                length = self.calcul_length(data[a], data[b])
-                self.list_of_length.append(
-                    (a, b, length)
-                )
-                if not self.vmax and not self.vmin:
-                    self.vmax = (a, b, length)
-                    self.vmin = (a, b, length)
-                else:
-                    self.vmax = (a, b, length)\
-                        if length > self.vmax[2]\
-                            else self.vmax
-                
-
-                    self.vmin = (a, b, length)\
-                        if length < self.vmin[2] \
-                            else self.vmin
-            data.pop()
-            len_data -= 1
-
-        print(self.vmax)
-        print(self.vmin)
-        print(sys.getsizeof(self.list_of_length))
-        print(datetime.now() - now)
 
 
 class CalculateNumpy:
@@ -54,27 +8,32 @@ class CalculateNumpy:
 
     def calcul_length(self, a: list, b: list):
         square = np.square(a - b)
-        return np.sum(square) 
+        return np.sum(square)
+    
+    def set_min_max(self, a, b, length):
+        args = (a, b, length)
+        if not self.vmax:
+            self.vmax = args
+        else:
+            self.vmax = args if length > self.vmax[2] else self.vmax
+
+        if not self.vmin:
+            self.vmin = args
+        else:
+            self.vmin = args if length < self.vmin[2] else self.vmin
+
 
     def __init__(self, data: list):
-        print(sys.getsizeof(data))
-        now = datetime.now()
-        len_data = len(data) -1
+        len_data = len(data) - 1
         for a in range(len_data, 0, -1):
             for b in range(len_data, 0, -1):
-                if a == b:
+                if a != b:
                     continue
-                
-                length = self.calcul_length(data[a], data[b])
+                square = np.square(data[a] - data[b])
+                length = np.sum(square)
                 np.append(self.list_of_length, length)
-                if not self.vmax and not self.vmin:
-                    self.vmin = self.vmax = (a, b, length)
-                else:
-                    self.vmax = (a, b, length) if length > self.vmax[2] else self.vmax
-                    self.vmin = (a, b, length) if length < self.vmin[2] else self.vmin
+                self.set_min_max(a, b, length)
             len_data -= 1
-            data = data = np.delete(data, len(data)-1, 0)
+            data = np.delete(data, a, axis=0)
         print(self.vmax)
         print(self.vmin)
-        print(sys.getsizeof(self.list_of_length))
-        print(datetime.now() - now)
