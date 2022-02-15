@@ -13,7 +13,7 @@
 ## MacOS / Linux
 `python3 -m venv venv` <br/>
 `cd venv` <br/>
-`cd bit` <br/>
+`cd bin` <br/>
 `source activate` <br/>
 `cd ..` <br/>
 `cd ..` <br/>
