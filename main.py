@@ -11,4 +11,6 @@ input_data_numpy = InputGenerator().open_as_numpy()
 
 # Вычисление
 print('Вычисление c Numpy')
-CalculateNumpy(input_data_numpy)
+result = CalculateNumpy(input_data_numpy)
+print(result.vmax)
+print(result.vmin)
