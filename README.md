@@ -1,6 +1,6 @@
 # Установка зависимостей
 ## Windows
-### python -m venv venv
+`python -m venv venv`
 ### cd venv
 ### cd Scripts
 ### activate
