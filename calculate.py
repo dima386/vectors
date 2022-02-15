@@ -1,43 +1,80 @@
+from importlib.metadata import distribution
 import sys
+import numpy as np
+from datetime import datetime
 
 
 class Calculate:
-    min_val = None
-    max_val = None
+    vmin = None
+    vmax = None
     list_of_length = []
 
     def calcul_length(self, a: list, b: list):
         length = sum(((float(a[i]) - float(b[i])) ** 2 for i, _ in enumerate(a)))
         return length 
 
-    def __init__(self, input_data: list):
-        print(sys.getsizeof(input_data))
-        len_data = len(input_data) -1
-        for i_a in range(len_data, 0, -1):
-            for i_b in range(len_data, 0, -1):
-                if i_a == i_b:
+    def __init__(self, data: list):
+        print(sys.getsizeof(data))
+        now = datetime.now()
+        len_data = len(data) -1
+        for a in range(len_data, 0, -1):
+            for b in range(len_data, 0, -1):
+                if a == b:
                     continue
                 
-                length = self.calcul_length(input_data[i_a], input_data[i_b])
+                length = self.calcul_length(data[a], data[b])
                 self.list_of_length.append(
-                    (i_a, i_b, length)
+                    (a, b, length)
                 )
-                if not self.max_val and not self.min_val:
-                    self.max_val = (i_a, i_b, length)
-                    self.min_val = (i_a, i_b, length)
+                if not self.vmax and not self.vmin:
+                    self.vmax = (a, b, length)
+                    self.vmin = (a, b, length)
                 else:
-                    self.max_val = (i_a, i_b, length)\
-                        if length > self.max_val[2]\
-                            else self.max_val
+                    self.vmax = (a, b, length)\
+                        if length > self.vmax[2]\
+                            else self.vmax
                 
 
-                    self.min_val = (i_a, i_b, length)\
-                        if length < self.min_val[2] \
-                            else self.min_val
-            input_data.pop()
+                    self.vmin = (a, b, length)\
+                        if length < self.vmin[2] \
+                            else self.vmin
+            data.pop()
             len_data -= 1
 
-        print(self.max_val)
-        print(self.min_val)
+        print(self.vmax)
+        print(self.vmin)
         print(sys.getsizeof(self.list_of_length))
-        print(len(self.list_of_length))
+        print(datetime.now() - now)
+
+
+class CalculateNumpy:
+    vmin = None
+    vmax = None
+    list_of_length = np.array([])
+
+    def calcul_length(self, a: list, b: list):
+        square = np.square(a - b)
+        return np.sum(square) 
+
+    def __init__(self, data: list):
+        print(sys.getsizeof(data))
+        now = datetime.now()
+        len_data = len(data) -1
+        for a in range(len_data, 0, -1):
+            for b in range(len_data, 0, -1):
+                if a == b:
+                    continue
+                
+                length = self.calcul_length(data[a], data[b])
+                np.append(self.list_of_length, length)
+                if not self.vmax and not self.vmin:
+                    self.vmin = self.vmax = (a, b, length)
+                else:
+                    self.vmax = (a, b, length) if length > self.vmax[2] else self.vmax
+                    self.vmin = (a, b, length) if length < self.vmin[2] else self.vmin
+            len_data -= 1
+            data = data = np.delete(data, len(data)-1, 0)
+        print(self.vmax)
+        print(self.vmin)
+        print(sys.getsizeof(self.list_of_length))
+        print(datetime.now() - now)

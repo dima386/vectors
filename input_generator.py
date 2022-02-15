@@ -1,6 +1,7 @@
 import csv
 import os
 import random
+import numpy as np
 
 
 class InputGenerator:
@@ -33,3 +34,6 @@ class InputGenerator:
     def open(self):
         with open(self.full_path, newline='') as csvfile:
             return list(csv.reader(csvfile, delimiter=',', quotechar='|'))
+    
+    def open_as_numpy(self):
+        return np.genfromtxt(self.full_path, delimiter=',')
