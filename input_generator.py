@@ -30,10 +30,6 @@ class InputGenerator:
             for _ in range(n):
                 vector = (random.uniform(*self.random_range) for _ in range(m))
                 output.writerow(vector)
-    
-    def open(self):
-        with open(self.full_path, newline='') as csvfile:
-            return list(csv.reader(csvfile, delimiter=',', quotechar='|'))
-    
+
     def open_as_numpy(self):
         return np.genfromtxt(self.full_path, delimiter=',')
